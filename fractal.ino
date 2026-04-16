@@ -16,8 +16,34 @@ XPT2046_Touchscreen touchscreen(XPT2046_CS, XPT2046_IRQ);
 
 TFT_eSPI tft = TFT_eSPI();
 
-int width,height,res;
+int width,height,res = 1;
 float cx,cy,zoom;
+char *name;
+
+typedef struct
+{ float cx, cy, zoom;
+  char name[20];
+}location;
+
+//mandelbrot positons
+  location locations[10] = {
+    {-0.6, 0, 0.01,"mandelbrot home"}, // home mandelbrot
+    {-1,-0.31,0.0004,"top"}, 
+    {-1.6,0,0.002,"side stars"},
+    {-0.74,0.169,0.0001517,"side"},
+    {-0.11,0.95,0.00033,"busy"}
+  };
+
+int i,active,fractal; 
+
+void newfractal (int num){
+  location loc = locations[num];
+  cx = loc.cx;
+  cy = loc.cy;
+  zoom = loc.zoom;
+  name = loc.name;
+  i = 0;
+}
 
 void setup(void) {
   tft.init();
@@ -33,10 +59,8 @@ void setup(void) {
   width = tft.width();
   height = tft.height();
 
-  res = 1;
   //mandelbrot home
-  cx  = -0.6; cy = 0;
-  zoom = 0.01;
+  newfractal(0);
 }
 
 void mandel(float cx, float cy, float scale, int i) {
@@ -90,8 +114,6 @@ void julia(float cx,float cy,float zoom, int y){
    // }
 }
 
-int i = 0;
-int fractal = 0;
 
 void loop() {
   
@@ -128,5 +150,11 @@ void loop() {
         zoom *=1.1;
       }    
       i = 0;
+      active = millis();
+    }
+
+    if (millis() - active > 30 * 1000){
+      active = millis();
+      newfractal(random(5));
     }
 }
