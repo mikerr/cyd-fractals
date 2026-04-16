@@ -69,13 +69,13 @@ void mandel(float cx, float cy, float scale, int i) {
   
 }
 
-void julia(float cx,float cy,float zoom, int x){
+void julia(float cx,float cy,float zoom, int y){
  int maxIter = 255;
  int w2 = width / 2;
  int h2 = height / 2;
-
+ zoom *= 1000;
     //for (int x=0; x < width; x += res) {
-        for (int y = 0; y < height; y += res) {
+        for (int x = 0; x < width; x += res) {
             float zx,zy;
             zx = 1.5 * (x - w2) / (w2 * zoom);
             zy = (y - h2) / (h2 * zoom);
@@ -91,9 +91,13 @@ void julia(float cx,float cy,float zoom, int x){
 }
 
 int i = 0;
+int fractal = 0;
 void loop() {
   
-    if (i < height) mandel(cx,cy,zoom,i++);
+    if (i < height) { 
+        if (fractal == 0) mandel(cx,cy,zoom,i++);
+        else julia(cx,cy,zoom,i++);
+    }
     
     int touch = 0;
     if (touchscreen.tirqTouched() && touchscreen.touched()) {
@@ -105,15 +109,25 @@ void loop() {
       delay(100);
       tft.drawRect(x-50,y-25,50,50,0);
 
-      if (x  > width-100 && y > height-100) zoom = 0.01; // bottom right - return to home
-      else {
+      if (x  > width-100 && y > height-100) {
+        zoom = 0.01; // bottom right - return to home
+      }
+      if (x < 100 && y > height-100) {
+        fractal = !fractal; // bottom left - flip between mandel and julia
+        delay(1000);
+      }
+      
+      if (fractal == 0) { // mandel}
         x -= width/2;
         y -= height/2;
         cx += x / 1000.0;
         cy += y / 1000.0;
         zoom *= 0.8;
       }
-
+      else { //julia
+        zoom *=1.1;
+      }
+      
       i = 0;
     }
 }
