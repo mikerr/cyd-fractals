@@ -48,25 +48,25 @@ void mandel(float cx, float cy, float scale, int i) {
   float x, y, zx, zy, zx2, zy2;
 	//for (int i = 0; i < height; i += res) {
     tft.fillRect(0,i,width,res,0);
-		for (int j = 0; j  < width; j += res) {
-			x = (j - w2) * scale + cx;
- 		  y = (i - h2) * scale + cy;
+		  for (int j = 0; j  < width; j += res) {
+		    	x = (j - w2) * scale + cx;
+ 		     y = (i - h2) * scale + cy;
 			
-      zx = hypot(x - 0.25, y);
-			if (x < zx - 2 * zx * zx + 0.25) continue;
-			if ((x + 1)*(x + 1) + y * y < 1/16) continue;
+       zx = hypot(x - 0.25, y);
+		    	if (x < zx - 2 * zx * zx + 0.25) continue;
+       if ((x + 1)*(x + 1) + y * y < 1/16) continue;
 
-			zx = zy = zx2 = zy2 = 0;
-			for (iter = 0; iter <= maxIter && zx2 + zy2 < 4; iter++) {
-				zy = 2 * zx * zy + y;
-				zx = zx2 - zy2 + x;
-				zx2 = zx * zx;
-				zy2 = zy * zy;
-			}
-			int colour = iter  * 500;
-      if (iter < maxIter) tft.fillRect(j,i,res,res,colour);
-    } 
-  
+			    zx = zy = zx2 = zy2 = 0;
+			    for (iter = 0; iter <= maxIter && zx2 + zy2 < 4; iter++) {
+			        	zy = 2 * zx * zy + y;
+			        	zx = zx2 - zy2 + x;
+				        zx2 = zx * zx;
+			        	zy2 = zy * zy;
+			    }
+			    int colour = iter  * 500;
+       if (iter < maxIter) tft.fillRect(j,i,res,res,colour);
+     } 
+  //}
 }
 
 void julia(float cx,float cy,float zoom, int y){
@@ -92,6 +92,7 @@ void julia(float cx,float cy,float zoom, int y){
 
 int i = 0;
 int fractal = 0;
+
 void loop() {
   
     if (i < height) { 
@@ -99,7 +100,6 @@ void loop() {
         else julia(cx,cy,zoom,i++);
     }
     
-    int touch = 0;
     if (touchscreen.tirqTouched() && touchscreen.touched()) {
       TS_Point p = touchscreen.getPoint();
       int x = map(p.x, 200, 3700, 1, width);
@@ -126,8 +126,7 @@ void loop() {
       }
       else { //julia
         zoom *=1.1;
-      }
-      
+      }    
       i = 0;
     }
 }
