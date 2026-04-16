@@ -2,6 +2,7 @@
 Mandelbrot and Julia fractals on ESP32 CYD
 
 ![](cyd-fractal.jpg)
+
 Usage:
 -----
 Touch to zoom and scroll, bottom left to reset.
